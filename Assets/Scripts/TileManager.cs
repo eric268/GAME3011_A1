@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 public class TileManager : MonoBehaviour
 {
     private MiningUnitAttributes tileAttributes;
+    public GridManager gridManager;
     // Start is called before the first frame update
     void Start()
     {
@@ -23,7 +24,6 @@ public class TileManager : MonoBehaviour
                 TileSelectedInExtractMode();
                 break;
         }
-        print("Down");
     }
     private void OnMouseEnter()
     {
@@ -50,12 +50,17 @@ public class TileManager : MonoBehaviour
 
     private void TileSelectedInScanMode()
     {
-        int row = GetComponent<MiningUnitAttributes>().rowPosition;
-        int col = GetComponent<MiningUnitAttributes>().columnPosition;
+        int rowPosition = GetComponent<MiningUnitAttributes>().rowPosition;
+        int columnPosition = GetComponent<MiningUnitAttributes>().columnPosition;
+        gridManager.UpdateTilesFromScan(columnPosition, rowPosition);
     }
 
     private void TileSelectedInExtractMode()
     {
-
+        int rowPosition = GetComponent<MiningUnitAttributes>().rowPosition;
+        int columnPosition = GetComponent<MiningUnitAttributes>().columnPosition;
+        gridManager.UpdateTilesFromExtract(columnPosition, rowPosition);
     }
+
+
 }

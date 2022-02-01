@@ -21,4 +21,9 @@ public class MiningUnitAttributes: MonoBehaviour
         this.highlightedMaterial = highlightedMaterial;
         this.currentTileValue = currentTileValue;
     }
+
+    public void SetMaterial(Material mat)
+    {
+        GetComponent<MeshRenderer>().material = mat;
+    }
 }

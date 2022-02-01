@@ -10,17 +10,18 @@ public class UIManager : MonoBehaviour
     public GameObject extractButton;
     public Color activeColor;
     public Color inactiveColor;
+
+    public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI extractsRemainingText;
+    public TextMeshProUGUI scansRemainingText;
+    public TextMeshProUGUI recentExtractionsMessageText;
+
     // Start is called before the first frame update
     void Start()
     {
         extractButton.GetComponent<Image>().color = inactiveColor;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public void OnScanButtonPressed()
     {
@@ -35,4 +36,22 @@ public class UIManager : MonoBehaviour
         extractButton.GetComponent<Image>().color = activeColor;
         scanButton.GetComponent<Image>().color = inactiveColor;
     }
+
+    public void UpdateScoreText(int score)
+    {
+        scoreText.text = "Score: " + score;
+    }
+    public void UpdateExtractionsRemaining(int extractionsRemaining)
+    {
+        extractsRemainingText.text = "Extractions Remaining: " + extractionsRemaining;
+    }
+    public void UpdateScansRemaining(int scansRemaining)
+    {
+        scansRemainingText.text = "Scans Remaining: " + scansRemaining;
+    }
+    public void UpdateRecentExtractionMessage(int score)
+    {
+        recentExtractionsMessageText.text = "Congratulations! You received " + score + " gold from your recent extraction!";
+    }
+
 }
