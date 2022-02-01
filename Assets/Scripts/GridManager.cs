@@ -11,7 +11,7 @@ public class GridManager : MonoBehaviour
     public GameObject miningUnitPrefab;
     public GameObject gridParentObject;
     public float gridSpacing;
-    GameObject[,] miningUnitArray;
+ 
     MiningUnitType[,] tileTypeArray;
 
     private int numberOfMaxValueTiles;
@@ -22,6 +22,13 @@ public class GridManager : MonoBehaviour
     public Material halfValueMaterial;
     public Material quarterValueMaterial;
     public Material minimalValueMaterial;
+    public Material hoveredStartingMaterial;
+    public Material hoveredMaxValueMaterial;
+    public Material hoveredHalfValueMaterial;
+    public Material hoveredQuarterValueMaterial;
+    public Material hoveredMinimalValueMaterial;
+
+
 
     [Header("Tile Values")]
     public int maxValue;
@@ -29,14 +36,16 @@ public class GridManager : MonoBehaviour
     public int quarterValue;
     public int minimalValue;
 
-    public int scanExtent;
+    public static int scanExtent;
+
+    public static MiningGameModes currentGameMode;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        currentGameMode = MiningGameModes.SCAN_MODE;
         numberOfMaxValueTiles = 15;
-        miningUnitArray = new GameObject[numOfRows,numOfColumns];
         tileTypeArray = new MiningUnitType[numOfRows, numOfColumns];
 
         CreateGrid();
@@ -55,8 +64,9 @@ public class GridManager : MonoBehaviour
         {
             for (int row = 0; row < numOfRows; row++)
             {
-                miningUnitArray[col,row] = CreateMiningTile(col, row);
-                miningUnitArray[col, row].GetComponent<MeshRenderer>().material = miningUnitArray[col, row].GetComponent<MiningUnitAttributes>().currentMaterial;
+                GridGenerator.GetInstance().miningTileArray[col,row] = CreateMiningTile(col, row);
+                //GridGenerator.GetInstance().miningTileArray[col, row].GetComponent<MeshRenderer>().material = GridGenerator.GetInstance().
+                //    miningTileArray[col, row].GetComponent<MiningUnitAttributes>().currentMaterial;
             }
         }
     }
@@ -79,7 +89,8 @@ public class GridManager : MonoBehaviour
         {
             for (int row = 0; row < numOfRows; row++)
             {
-                miningUnitArray[numOfColumns, numOfRows].GetComponent<MiningUnitAttributes>().SetTileAttributes(MiningUnitType.MINIMAL_RESOURCE, minimalValueMaterial, minimalValue);
+                GridGenerator.GetInstance().miningTileArray[numOfColumns, numOfRows].GetComponent<MiningUnitAttributes>().SetTileAttributes
+                    (MiningUnitType.MINIMAL_RESOURCE, minimalValueMaterial,hoveredMinimalValueMaterial, minimalValue);
             }
         }
     }
@@ -143,16 +154,16 @@ public class GridManager : MonoBehaviour
         switch (tileTypeArray[columPos, rowPos])
         {
             case MiningUnitType.MAX_RESOURCE:
-                tile.GetComponent<MiningUnitAttributes>().SetTileAttributes(MiningUnitType.MAX_RESOURCE, maxValueMaterial, maxValue);
+                tile.GetComponent<MiningUnitAttributes>().SetTileAttributes(MiningUnitType.MAX_RESOURCE, maxValueMaterial,hoveredMaxValueMaterial, maxValue);
                 break;
             case MiningUnitType.HALF_RESOURCE:
-                tile.GetComponent<MiningUnitAttributes>().SetTileAttributes(MiningUnitType.HALF_RESOURCE, halfValueMaterial, halfValue);
+                tile.GetComponent<MiningUnitAttributes>().SetTileAttributes(MiningUnitType.HALF_RESOURCE,hoveredHalfValueMaterial, halfValueMaterial, halfValue);
                 break;
             case MiningUnitType.QUARTER_RESOURCE:
-                tile.GetComponent<MiningUnitAttributes>().SetTileAttributes(MiningUnitType.QUARTER_RESOURCE, quarterValueMaterial, quarterValue);
+                tile.GetComponent<MiningUnitAttributes>().SetTileAttributes(MiningUnitType.QUARTER_RESOURCE,hoveredQuarterValueMaterial, quarterValueMaterial, quarterValue);
                 break;
             case MiningUnitType.MINIMAL_RESOURCE:
-                tile.GetComponent<MiningUnitAttributes>().SetTileAttributes(MiningUnitType.MINIMAL_RESOURCE, minimalValueMaterial, minimalValue);
+                tile.GetComponent<MiningUnitAttributes>().SetTileAttributes(MiningUnitType.MINIMAL_RESOURCE,hoveredMinimalValueMaterial, minimalValueMaterial, minimalValue);
                 break;
         }
     }

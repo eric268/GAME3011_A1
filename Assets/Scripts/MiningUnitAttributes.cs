@@ -5,15 +5,20 @@ using UnityEngine;
 public class MiningUnitAttributes: MonoBehaviour
 {
     public MiningUnitType unitType;
-    public Material currentMaterial;
+    public Material startingResourceMaterial;
+    public Material startingHighlightedResourceMaterial;
+    public Material scannedMaterial;
+    public Material highlightedMaterial;
     public int currentTileValue;
     public int rowPosition;
     public int columnPosition;
+    public bool tileHasBeenScanned;
 
-    public void SetTileAttributes(MiningUnitType unitType, Material currentMaterial, int currentTileValue)
+    public void SetTileAttributes(MiningUnitType unitType, Material currentMaterial, Material highlightedMaterial, int currentTileValue)
     {
         this.unitType = unitType;
-        this.currentMaterial = currentMaterial;
+        this.scannedMaterial = currentMaterial;
+        this.highlightedMaterial = highlightedMaterial;
         this.currentTileValue = currentTileValue;
     }
 }
