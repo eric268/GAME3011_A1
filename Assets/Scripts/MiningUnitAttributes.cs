@@ -4,19 +4,16 @@ using UnityEngine;
 
 public class MiningUnitAttributes: MonoBehaviour
 {
-    public Material startingResourceMaterial;
-    public Material maxResourceMaterial;
-    public Material halfResourceMaterial;
-    public Material QuarterResourceMaterial;
-    public Material minimalResourceMaterial;
-
-    public int maxResourceValue;
-    public int halfResourceValue;
-    public int quarterResourceValue;
-    public int minimalResourceValue;
-
+    public MiningUnitType unitType;
+    public Material currentMaterial;
+    public int currentTileValue;
     public int rowPosition;
     public int columnPosition;
 
-    public MiningUnitType unitType;
+    public void SetTileAttributes(MiningUnitType unitType, Material currentMaterial, int currentTileValue)
+    {
+        this.unitType = unitType;
+        this.currentMaterial = currentMaterial;
+        this.currentTileValue = currentTileValue;
+    }
 }

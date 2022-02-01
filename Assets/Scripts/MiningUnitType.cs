@@ -4,9 +4,9 @@ using UnityEngine;
 
 public enum MiningUnitType
 {
-    MAX_RESOURCE,
-    HALF_RESOURCE,
-    QUARTER_RESOURCE,
     MINIMAL_RESOURCE,
-    STARTING_RESOURCE
+    QUARTER_RESOURCE,
+    HALF_RESOURCE,
+    MAX_RESOURCE,
+    NUM_RESOURCE_TYPES
 }

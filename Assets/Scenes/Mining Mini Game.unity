@@ -303,36 +303,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 270, y: 0, z: 0}
---- !u!1 &1534767039
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1534767040}
-  m_Layer: 0
-  m_Name: Grid
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1534767040
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1534767039}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 15.767399, y: -4.5625243, z: -41.459145}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1699946111
 GameObject:
   m_ObjectHideFlags: 0
@@ -344,7 +314,7 @@ GameObject:
   - component: {fileID: 1699946112}
   - component: {fileID: 1699946113}
   m_Layer: 0
-  m_Name: Grid Generator
+  m_Name: Grid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -382,6 +352,16 @@ MonoBehaviour:
   miningUnitPrefab: {fileID: 3581101403956122187, guid: 934c23de6529b5747b6a21575b7d1b91, type: 3}
   gridParentObject: {fileID: 0}
   gridSpacing: 0.55
+  startingMaterial: {fileID: 2100000, guid: 159230cfcb9544e4381524fb3afb2091, type: 2}
+  maxValueMaterial: {fileID: 2100000, guid: 21ac12370411e4949812f3ed3af6a24d, type: 2}
+  halfValueMaterial: {fileID: 2100000, guid: 7a754253b7ca71541ad4f8d44ab18ec2, type: 2}
+  quarterValueMaterial: {fileID: 2100000, guid: ef70210b737940b4a810eefe747fff5b, type: 2}
+  minimalValueMaterial: {fileID: 2100000, guid: df36ff50157e84d4b9abdd03a495cae4, type: 2}
+  maxValue: 1000
+  halfValue: 500
+  quarterValue: 250
+  minimalValue: 625
+  scanExtent: 2
 --- !u!1 &2087303183
 GameObject:
   m_ObjectHideFlags: 0
