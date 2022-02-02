@@ -39,7 +39,6 @@ public class GridManager : MonoBehaviour
     public static int scanExtent;
 
     [Header("Game Variables")]
-    public static MiningGameModes currentGameMode;
     public static int playerScore;
     public int startingNumberOfScans;
     public static int scansRemaining;
@@ -52,7 +51,7 @@ public class GridManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        currentGameMode = MiningGameModes.SCAN_MODE;
+        GameStatManager.currentGameMode = MiningGameModes.EXTRACT_MODE;
         scanExtent = 2;
         numberOfMaxValueTiles = 15;
         tileTypeArray = new MiningUnitType[numOfRows, numOfColumns];
@@ -167,13 +166,13 @@ public class GridManager : MonoBehaviour
                 tile.GetComponent<MiningUnitAttributes>().SetTileAttributes(MiningUnitType.MAX_RESOURCE, maxValueMaterial,hoveredMaxValueMaterial, maxValue);
                 break;
             case MiningUnitType.HALF_RESOURCE:
-                tile.GetComponent<MiningUnitAttributes>().SetTileAttributes(MiningUnitType.HALF_RESOURCE,hoveredHalfValueMaterial, halfValueMaterial, halfValue);
+                tile.GetComponent<MiningUnitAttributes>().SetTileAttributes(MiningUnitType.HALF_RESOURCE, halfValueMaterial, hoveredHalfValueMaterial, halfValue);
                 break;
             case MiningUnitType.QUARTER_RESOURCE:
-                tile.GetComponent<MiningUnitAttributes>().SetTileAttributes(MiningUnitType.QUARTER_RESOURCE,hoveredQuarterValueMaterial, quarterValueMaterial, quarterValue);
+                tile.GetComponent<MiningUnitAttributes>().SetTileAttributes(MiningUnitType.QUARTER_RESOURCE, quarterValueMaterial, hoveredQuarterValueMaterial, quarterValue);
                 break;
             case MiningUnitType.MINIMAL_RESOURCE:
-                tile.GetComponent<MiningUnitAttributes>().SetTileAttributes(MiningUnitType.MINIMAL_RESOURCE,hoveredMinimalValueMaterial, minimalValueMaterial, minimalValue);
+                tile.GetComponent<MiningUnitAttributes>().SetTileAttributes(MiningUnitType.MINIMAL_RESOURCE, minimalValueMaterial, hoveredMinimalValueMaterial, minimalValue);
                 break;
         }
     }
@@ -223,8 +222,9 @@ public class GridManager : MonoBehaviour
         int pointsEarned = tile.GetComponent<MiningUnitAttributes>().currentTileValue;
         playerScore += pointsEarned;
         recentPointsEarned = pointsEarned;
-        tile.GetComponent<MiningUnitAttributes>().SetTileAttributes(MiningUnitType.MINIMAL_RESOURCE, hoveredMinimalValueMaterial, minimalValueMaterial, minimalValue);
+        tile.GetComponent<MiningUnitAttributes>().SetTileAttributes(MiningUnitType.MINIMAL_RESOURCE, minimalValueMaterial, hoveredMinimalValueMaterial, minimalValue);
         tile.GetComponent<MiningUnitAttributes>().SetMaterial(minimalValueMaterial);
+        tile.GetComponent<MiningUnitAttributes>().tileHasBeenScanned = true;
     }
 
     public void ReduceSurroundingExtractedTiles(GameObject tile)
@@ -232,19 +232,23 @@ public class GridManager : MonoBehaviour
         switch (tile.GetComponent<MiningUnitAttributes>().unitType)
         {
             case MiningUnitType.MAX_RESOURCE:
-                tile.GetComponent<MiningUnitAttributes>().SetTileAttributes(MiningUnitType.HALF_RESOURCE, hoveredHalfValueMaterial, halfValueMaterial, halfValue);
+                tile.GetComponent<MiningUnitAttributes>().SetTileAttributes(MiningUnitType.HALF_RESOURCE, halfValueMaterial, hoveredHalfValueMaterial, halfValue);
                 tile.GetComponent<MiningUnitAttributes>().SetMaterial(tile.GetComponent<MiningUnitAttributes>().scannedMaterial);
+                tile.GetComponent<MiningUnitAttributes>().tileHasBeenScanned = true;
                 break;
             case MiningUnitType.HALF_RESOURCE:
-                tile.GetComponent<MiningUnitAttributes>().SetTileAttributes(MiningUnitType.QUARTER_RESOURCE, hoveredQuarterValueMaterial, quarterValueMaterial, quarterValue);
+                tile.GetComponent<MiningUnitAttributes>().SetTileAttributes(MiningUnitType.QUARTER_RESOURCE, quarterValueMaterial, hoveredQuarterValueMaterial, quarterValue);
                 tile.GetComponent<MiningUnitAttributes>().SetMaterial(tile.GetComponent<MiningUnitAttributes>().scannedMaterial);
+                tile.GetComponent<MiningUnitAttributes>().tileHasBeenScanned = true;
                 break;
             case MiningUnitType.QUARTER_RESOURCE:
-                tile.GetComponent<MiningUnitAttributes>().SetTileAttributes(MiningUnitType.MINIMAL_RESOURCE, hoveredMinimalValueMaterial, minimalValueMaterial, minimalValue);
+                tile.GetComponent<MiningUnitAttributes>().SetTileAttributes(MiningUnitType.MINIMAL_RESOURCE, minimalValueMaterial, hoveredMinimalValueMaterial, minimalValue);
                 tile.GetComponent<MiningUnitAttributes>().SetMaterial(tile.GetComponent<MiningUnitAttributes>().scannedMaterial);
+                tile.GetComponent<MiningUnitAttributes>().tileHasBeenScanned = true;
                 break;
             case MiningUnitType.MINIMAL_RESOURCE:
-                //Do nothing
+                tile.GetComponent<MiningUnitAttributes>().SetMaterial(tile.GetComponent<MiningUnitAttributes>().scannedMaterial);
+                tile.GetComponent<MiningUnitAttributes>().tileHasBeenScanned = true;
                 break;
         }
     }

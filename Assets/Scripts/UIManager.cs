@@ -7,8 +7,8 @@ using System;
 
 public class UIManager : MonoBehaviour
 {
-    public GameObject scanButton;
-    public GameObject extractButton;
+    public GameObject toggleGameModeButton;
+
     public Color activeColor;
     public Color inactiveColor;
 
@@ -16,6 +16,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI extractsRemainingText;
     public TextMeshProUGUI scansRemainingText;
     public TextMeshProUGUI recentExtractionsMessageText;
+    public TextMeshProUGUI currentGameModeText;
 
     public GameObject activeIcon;
     public Sprite pickAxeIcon;
@@ -25,12 +26,15 @@ public class UIManager : MonoBehaviour
     public Vector3 shovelOffset;
     public Vector3 pickAxeOffset;
 
+    
+
     // Start is called before the first frame update
     void Start()
     {
-        extractButton.GetComponent<Image>().color = inactiveColor;
-        iconOffset = shovelOffset;
+        activeIcon.GetComponent<Image>().sprite = pickAxeIcon;
+        iconOffset = pickAxeOffset;
         Cursor.visible = false;
+        currentGameModeText.text = "Current Mode: Extract";
     }
 
     private void Update()
@@ -38,39 +42,54 @@ public class UIManager : MonoBehaviour
         activeIcon.transform.position = Input.mousePosition + iconOffset;
     }
 
-    public void OnScanButtonPressed()
+    public void ToggleGameModeButtonPressed()
     {
-        GridManager.currentGameMode = MiningGameModes.SCAN_MODE;
-        extractButton.GetComponent<Image>().color = inactiveColor;
-        scanButton.GetComponent<Image>().color = activeColor;
+        if (GameStatManager.currentGameMode == MiningGameModes.EXTRACT_MODE)
+            ChangeToScanMode();
+        else
+            ChangeToExtractMode();
+
+    }
+    public void ChangeToScanMode()
+    {
+        GameStatManager.currentGameMode = MiningGameModes.SCAN_MODE;
         activeIcon.GetComponent<Image>().sprite = shovelIcon;
         iconOffset = shovelOffset;
+        currentGameModeText.text = "Current Mode: Scan";
     }
 
-    public void OnExtractButtonPressed()
+    public void ChangeToExtractMode()
     {
-        GridManager.currentGameMode = MiningGameModes.EXTRACT_MODE;
-        extractButton.GetComponent<Image>().color = activeColor;
-        scanButton.GetComponent<Image>().color = inactiveColor;
+        GameStatManager.currentGameMode = MiningGameModes.EXTRACT_MODE;
         activeIcon.GetComponent<Image>().sprite = pickAxeIcon;
         iconOffset = pickAxeOffset;
+        currentGameModeText.text = "Current Mode: Extract";
     }
 
-    public void UpdateScoreText(int score)
+    public void UpdateScoreText()
     {
-        scoreText.text = "Score: " + score;
+        scoreText.text = "Score: " + GameStatManager.score;
     }
-    public void UpdateExtractionsRemaining(int extractionsRemaining)
+    public void UpdateExtractionsRemaining()
     {
-        extractsRemainingText.text = "Extractions Remaining: " + extractionsRemaining;
+        extractsRemainingText.text = "Extractions Remaining: " + GameStatManager.extractionsRemaining;
     }
-    public void UpdateScansRemaining(int scansRemaining)
+    public void UpdateScansRemaining()
     {
-        scansRemainingText.text = "Scans Remaining: " + scansRemaining;
+        scansRemainingText.text = "Scans Remaining: " + GameStatManager.scansRemaining;
     }
-    public void UpdateRecentExtractionMessage(int score)
+    public void UpdateRecentExtractionMessage()
     {
-        recentExtractionsMessageText.text = "Congratulations! You received " + score + " gold from your recent extraction!";
+        recentExtractionsMessageText.text = "Congratulations! You received " + GameStatManager.score + " gold from your recent extraction!";
+    }
+
+    public void OnResetGameButton()
+    {
+        GameStatManager.ResetAllGameStats();
+        ChangeToExtractMode();
+        UpdateScoreText();
+        UpdateExtractionsRemaining();
+        UpdateScansRemaining();
     }
 
 }

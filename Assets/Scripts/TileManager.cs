@@ -15,7 +15,7 @@ public class TileManager : MonoBehaviour
 
     private void OnMouseDown()
     {
-        switch (GridManager.currentGameMode)
+        switch (GameStatManager.currentGameMode)
         {
             case MiningGameModes.SCAN_MODE:
                 TileSelectedInScanMode();
@@ -50,17 +50,24 @@ public class TileManager : MonoBehaviour
 
     private void TileSelectedInScanMode()
     {
-        int rowPosition = GetComponent<MiningUnitAttributes>().rowPosition;
-        int columnPosition = GetComponent<MiningUnitAttributes>().columnPosition;
-        gridManager.UpdateTilesFromScan(columnPosition, rowPosition);
+        if (GameStatManager.scansRemaining > 0)
+        {
+            int rowPosition = GetComponent<MiningUnitAttributes>().rowPosition;
+            int columnPosition = GetComponent<MiningUnitAttributes>().columnPosition;
+            gridManager.UpdateTilesFromScan(columnPosition, rowPosition);
+            GameStatManager.scansRemaining--;
+        }
+
     }
 
     private void TileSelectedInExtractMode()
     {
-        int rowPosition = GetComponent<MiningUnitAttributes>().rowPosition;
-        int columnPosition = GetComponent<MiningUnitAttributes>().columnPosition;
-        gridManager.UpdateTilesFromExtract(columnPosition, rowPosition);
+        if (GameStatManager.extractionsRemaining > 0)
+        {
+            GameStatManager.extractionsRemaining--;
+            int rowPosition = GetComponent<MiningUnitAttributes>().rowPosition;
+            int columnPosition = GetComponent<MiningUnitAttributes>().columnPosition;
+            gridManager.UpdateTilesFromExtract(columnPosition, rowPosition);
+        }
     }
-
-
 }
