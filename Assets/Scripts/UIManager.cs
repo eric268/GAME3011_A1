@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System;
 
 public class UIManager : MonoBehaviour
 {
@@ -16,18 +17,34 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI scansRemainingText;
     public TextMeshProUGUI recentExtractionsMessageText;
 
+    public GameObject activeIcon;
+    public Sprite pickAxeIcon;
+    public Sprite shovelIcon;
+
+    public Vector3 iconOffset;
+    public Vector3 shovelOffset;
+    public Vector3 pickAxeOffset;
+
     // Start is called before the first frame update
     void Start()
     {
         extractButton.GetComponent<Image>().color = inactiveColor;
+        iconOffset = shovelOffset;
+        Cursor.visible = false;
     }
 
+    private void Update()
+    {
+        activeIcon.transform.position = Input.mousePosition + iconOffset;
+    }
 
     public void OnScanButtonPressed()
     {
         GridManager.currentGameMode = MiningGameModes.SCAN_MODE;
         extractButton.GetComponent<Image>().color = inactiveColor;
         scanButton.GetComponent<Image>().color = activeColor;
+        activeIcon.GetComponent<Image>().sprite = shovelIcon;
+        iconOffset = shovelOffset;
     }
 
     public void OnExtractButtonPressed()
@@ -35,6 +52,8 @@ public class UIManager : MonoBehaviour
         GridManager.currentGameMode = MiningGameModes.EXTRACT_MODE;
         extractButton.GetComponent<Image>().color = activeColor;
         scanButton.GetComponent<Image>().color = inactiveColor;
+        activeIcon.GetComponent<Image>().sprite = pickAxeIcon;
+        iconOffset = pickAxeOffset;
     }
 
     public void UpdateScoreText(int score)
