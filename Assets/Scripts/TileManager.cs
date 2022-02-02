@@ -52,10 +52,10 @@ public class TileManager : MonoBehaviour
     {
         if (GameStatManager.scansRemaining > 0)
         {
+            GameStatManager.scansRemaining--;
             int rowPosition = GetComponent<MiningUnitAttributes>().rowPosition;
             int columnPosition = GetComponent<MiningUnitAttributes>().columnPosition;
             gridManager.UpdateTilesFromScan(columnPosition, rowPosition);
-            GameStatManager.scansRemaining--;
         }
 
     }
@@ -68,6 +68,10 @@ public class TileManager : MonoBehaviour
             int rowPosition = GetComponent<MiningUnitAttributes>().rowPosition;
             int columnPosition = GetComponent<MiningUnitAttributes>().columnPosition;
             gridManager.UpdateTilesFromExtract(columnPosition, rowPosition);
+        }
+        if (GameStatManager.extractionsRemaining == 0 && MiningUIManager.showTilesOnGameOver)
+        {
+            gridManager.DisplayAllMaterials();
         }
     }
 }

@@ -4,10 +4,12 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System;
+using UnityEngine.SceneManagement;
 
-public class UIManager : MonoBehaviour
+public class MiningUIManager : MonoBehaviour
 {
-    public GameObject toggleGameModeButton;
+    public GridManager gridManager;
+    public Toggle showRemainingTilesToggle;
 
     public Color activeColor;
     public Color inactiveColor;
@@ -26,15 +28,18 @@ public class UIManager : MonoBehaviour
     public Vector3 shovelOffset;
     public Vector3 pickAxeOffset;
 
+    public static bool showTilesOnGameOver;
+
     
 
     // Start is called before the first frame update
     void Start()
     {
         activeIcon.GetComponent<Image>().sprite = pickAxeIcon;
+        gridManager.UpdateUIText = UpdateUI;
         iconOffset = pickAxeOffset;
-        Cursor.visible = false;
         currentGameModeText.text = "Current Mode: Extract";
+        showTilesOnGameOver = showRemainingTilesToggle.isOn;
     }
 
     private void Update()
@@ -48,7 +53,14 @@ public class UIManager : MonoBehaviour
             ChangeToScanMode();
         else
             ChangeToExtractMode();
+    }
 
+    public void ResetGameButton()
+    {
+        gridManager.ResetGrid();
+        GameStatManager.ResetAllGameStats();
+        ChangeToExtractMode();
+        UpdateUI();
     }
     public void ChangeToScanMode()
     {
@@ -68,11 +80,11 @@ public class UIManager : MonoBehaviour
 
     public void UpdateScoreText()
     {
-        scoreText.text = "Score: " + GameStatManager.score;
+        scoreText.text = "Total Score: " + GameStatManager.score;
     }
     public void UpdateExtractionsRemaining()
     {
-        extractsRemainingText.text = "Extractions Remaining: " + GameStatManager.extractionsRemaining;
+        extractsRemainingText.text = "Extracts Remaining: " + GameStatManager.extractionsRemaining;
     }
     public void UpdateScansRemaining()
     {
@@ -80,16 +92,24 @@ public class UIManager : MonoBehaviour
     }
     public void UpdateRecentExtractionMessage()
     {
-        recentExtractionsMessageText.text = "Congratulations! You received " + GameStatManager.score + " gold from your recent extraction!";
+        recentExtractionsMessageText.text = "Congratulations! You received " + GameStatManager.recentExtractGoldEarned + " gold from your recent extraction!";
     }
 
-    public void OnResetGameButton()
+    public void UpdateUI()
     {
-        GameStatManager.ResetAllGameStats();
-        ChangeToExtractMode();
         UpdateScoreText();
         UpdateExtractionsRemaining();
         UpdateScansRemaining();
+    }
+    
+    public void OnShowRemainingTilesTogglePressed()
+    {
+        showTilesOnGameOver = showRemainingTilesToggle.isOn;
+    }
+
+    public void OnLeaveButtonPressed()
+    {
+        SceneManager.LoadScene("MainLevel");
     }
 
 }

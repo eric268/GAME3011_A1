@@ -6,8 +6,6 @@ using UnityEngine;
 public class GridManager : MonoBehaviour
 {
     public Vector3 startingPosition = Vector3.zero;
-    public int numOfRows;
-    public int numOfColumns;
     public GameObject miningUnitPrefab;
     public GameObject gridParentObject;
     public float gridSpacing;
@@ -39,13 +37,8 @@ public class GridManager : MonoBehaviour
     public static int scanExtent;
 
     [Header("Game Variables")]
-    public static int playerScore;
-    public int startingNumberOfScans;
-    public static int scansRemaining;
-    public int startingNumberOfExtracts;
-    public static int extractsRemaining;
-    public static int recentPointsEarned;
-    public UIManager uIManager;
+    public MiningUIManager uIManager;
+    public Action UpdateUIText;
 
 
     // Start is called before the first frame update
@@ -54,25 +47,18 @@ public class GridManager : MonoBehaviour
         GameStatManager.currentGameMode = MiningGameModes.EXTRACT_MODE;
         scanExtent = 2;
         numberOfMaxValueTiles = 15;
-        tileTypeArray = new MiningUnitType[numOfRows, numOfColumns];
-        scansRemaining = startingNumberOfScans;
-        extractsRemaining = startingNumberOfExtracts;
+        tileTypeArray = new MiningUnitType[GridGenerator.numberOfRows, GridGenerator.numberOfColumns];
 
         CreateGrid();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     private void CreateGrid()
     {
         RandomizeGridResources();
 
-        for (int col = 0; col < numOfColumns; col++)
+        for (int col = 0; col < GridGenerator.numberOfColumns; col++)
         {
-            for (int row = 0; row < numOfRows; row++)
+            for (int row = 0; row < GridGenerator.numberOfRows; row++)
             {
                 GridGenerator.GetInstance().miningTileArray[col,row] = CreateMiningTile(col, row);
                 GridGenerator.GetInstance().miningTileArray[col, row].GetComponent<TileManager>().gridManager = this;
@@ -90,28 +76,44 @@ public class GridManager : MonoBehaviour
         return instatiatedObject;
     }
 
-    private void ResetGrid()
+    public void ResetGrid()
     {
         Array.Clear(tileTypeArray, 0, tileTypeArray.Length);
-
-        for (int col = 0; col < numOfColumns; col++)
+        RandomizeGridResources();
+        for (int col = 0; col < GridGenerator.numberOfColumns; col++)
         {
-            for (int row = 0; row < numOfRows; row++)
+            for (int row = 0; row < GridGenerator.numberOfRows; row++)
             {
-                GridGenerator.GetInstance().miningTileArray[numOfColumns, numOfRows].GetComponent<MiningUnitAttributes>().SetTileAttributes
-                    (MiningUnitType.MINIMAL_RESOURCE, minimalValueMaterial,hoveredMinimalValueMaterial, minimalValue);
+                UpdateTileBasedOnType(GridGenerator.GetInstance().miningTileArray[col, row], col, row);
+                //GridGenerator.GetInstance().miningTileArray[col, row].GetComponent<MiningUnitAttributes>().SetTileAttributes
+                //    (MiningUnitType.MINIMAL_RESOURCE, minimalValueMaterial,hoveredMinimalValueMaterial, minimalValue);
+
+                GridGenerator.GetInstance().miningTileArray[col, row].GetComponent<MiningUnitAttributes>().SetMaterial(startingMaterial);
+                GridGenerator.GetInstance().miningTileArray[col, row].GetComponent<MiningUnitAttributes>().tileHasBeenScanned = false;
             }
         }
     }
 
+    public void DisplayAllMaterials()
+    {
+        for (int col = 0; col < GridGenerator.numberOfColumns; col++)
+        {
+            for (int row = 0; row < GridGenerator.numberOfRows; row++)
+            {
+                GridGenerator.GetInstance().miningTileArray[col, row].GetComponent<MiningUnitAttributes>().SetMaterial(GridGenerator.GetInstance().miningTileArray[col, row].GetComponent<MiningUnitAttributes>().scannedMaterial);
+                GridGenerator.GetInstance().miningTileArray[col, row].GetComponent<MiningUnitAttributes>().tileHasBeenScanned = true;
+            }
+        }
+
+    }
     private void RandomizeGridResources()
     {
         int maxValueTilesPlacedCounter = 0;
 
         int minColumIndex =  scanExtent;
         int minRowIndex =   scanExtent;
-        int maxColumIndex = numOfColumns - scanExtent;
-        int maxRowIndex = numOfColumns - scanExtent;
+        int maxColumIndex = GridGenerator.numberOfColumns - scanExtent;
+        int maxRowIndex = GridGenerator.numberOfColumns - scanExtent;
 
 
         while (maxValueTilesPlacedCounter < numberOfMaxValueTiles)
@@ -179,6 +181,7 @@ public class GridManager : MonoBehaviour
 
     public void UpdateTilesFromScan(int columPos, int rowPos)
     {
+        UpdateUIText();
         for (int col = -scanExtent; col <= scanExtent; col ++)
         {   
             for (int row = -scanExtent; row <= scanExtent; row++)
@@ -219,12 +222,15 @@ public class GridManager : MonoBehaviour
 
     public void ReduceExtractedTile(GameObject tile)
     {
-        int pointsEarned = tile.GetComponent<MiningUnitAttributes>().currentTileValue;
-        playerScore += pointsEarned;
-        recentPointsEarned = pointsEarned;
+        GameStatManager.score += tile.GetComponent<MiningUnitAttributes>().currentTileValue;
+        GameStatManager.recentExtractGoldEarned = tile.GetComponent<MiningUnitAttributes>().currentTileValue;
+
         tile.GetComponent<MiningUnitAttributes>().SetTileAttributes(MiningUnitType.MINIMAL_RESOURCE, minimalValueMaterial, hoveredMinimalValueMaterial, minimalValue);
         tile.GetComponent<MiningUnitAttributes>().SetMaterial(minimalValueMaterial);
         tile.GetComponent<MiningUnitAttributes>().tileHasBeenScanned = true;
+
+        UpdateUIText();
+        uIManager.UpdateRecentExtractionMessage();
     }
 
     public void ReduceSurroundingExtractedTiles(GameObject tile)
@@ -252,5 +258,4 @@ public class GridManager : MonoBehaviour
                 break;
         }
     }
-
 }

@@ -9,6 +9,7 @@ public class GameStatManager : MonoBehaviour
     public static int maxNumberOfExtractions;
     public static int scansRemaining;
     public static int extractionsRemaining;
+    public static int recentExtractGoldEarned;
     public static int score;
     // Start is called before the first frame update
     void Start()
@@ -26,6 +27,7 @@ public class GameStatManager : MonoBehaviour
         scansRemaining = maxNumberOfScans;
         extractionsRemaining = maxNumberOfExtractions;
         currentGameMode = MiningGameModes.EXTRACT_MODE;
+        recentExtractGoldEarned = 0;
         score = 0;
     }
 }
