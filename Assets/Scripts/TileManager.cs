@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,10 +8,12 @@ public class TileManager : MonoBehaviour
 {
     private MiningUnitAttributes tileAttributes;
     public GridManager gridManager;
+    public Action DisplayFinalScoreMessage;
     // Start is called before the first frame update
     void Start()
     {
         tileAttributes = GetComponent<MiningUnitAttributes>();
+        DisplayFinalScoreMessage = gridManager.uIManager.DisplayFinalScoreMessage;
     }
 
     private void OnMouseDown()
@@ -71,6 +74,7 @@ public class TileManager : MonoBehaviour
         }
         if (GameStatManager.extractionsRemaining == 0 && MiningUIManager.showTilesOnGameOver)
         {
+            DisplayFinalScoreMessage();
             gridManager.DisplayAllMaterials();
         }
     }

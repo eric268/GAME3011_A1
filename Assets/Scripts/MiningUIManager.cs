@@ -61,6 +61,7 @@ public class MiningUIManager : MonoBehaviour
         GameStatManager.ResetAllGameStats();
         ChangeToExtractMode();
         UpdateUI();
+        recentExtractionsMessageText.text = "";
     }
     public void ChangeToScanMode()
     {
@@ -110,6 +111,11 @@ public class MiningUIManager : MonoBehaviour
     public void OnLeaveButtonPressed()
     {
         SceneManager.LoadScene("MainLevel");
+    }
+
+    public void DisplayFinalScoreMessage()
+    {
+        recentExtractionsMessageText.text = "Game Over! You received " + GameStatManager.score + " gold from playing Mining Mayhem!";
     }
 
 }

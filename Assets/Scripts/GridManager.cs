@@ -46,7 +46,7 @@ public class GridManager : MonoBehaviour
     {
         GameStatManager.currentGameMode = MiningGameModes.EXTRACT_MODE;
         scanExtent = 2;
-        numberOfMaxValueTiles = 15;
+        numberOfMaxValueTiles = 10;
         tileTypeArray = new MiningUnitType[GridGenerator.numberOfRows, GridGenerator.numberOfColumns];
 
         CreateGrid();
